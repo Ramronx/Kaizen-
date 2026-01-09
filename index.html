@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>KAIZEN</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Dots&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+/* Reset & Base */
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#050505;color:#FFD700;font-family:'Montserrat',sans-serif;overflow-x:hidden;transition:background 0.3s;}
+header{position:fixed;top:0;left:0;width:100%;padding:15px 20px;display:flex;justify-content:space-between;align-items:center;background: rgba(0,0,0,0.5);z-index:20;}
+.logo{font-family:'Zen Dots',cursive;font-size:24px;color:#FFD700;}
+nav{position:fixed;top:60px;left:-100%;width:70%;height:100vh;background: rgba(0,0,0,0.95);padding:30px;display:flex;flex-direction:column;gap:20px;transition:left 0.3s ease;z-index:15;}
+nav a{color:#FFD700;text-decoration:none;font-size:18px;}
+nav.active{left:0;}
+.hamburger{display:flex;flex-direction:column;justify-content:space-between;width:25px;height:18px;cursor:pointer;z-index:25;}
+.hamburger div{height:3px;background:#FFD700;border-radius:2px;transition: all 0.3s;}
+.hamburger.open div:nth-child(1){transform: rotate(45deg) translate(5px,5px);}
+.hamburger.open div:nth-child(2){opacity:0;}
+.hamburger.open div:nth-child(3){transform: rotate(-45deg) translate(5px,-5px);}
+main, #interface-services, #full-screen-category, #full-screen-manga, #full-screen-story, #full-about, #full-help{margin-top:80px;text-align:center;padding:20px;transition: background 0.3s;}
+h2{font-family:'Zen Dots',cursive;font-size:32px;color:#FFD700;margin-bottom:20px;text-shadow:0 0 8px #FFD700;}
+blockquote,p{color:#fff;font-style:italic;font-size:18px;margin-bottom:20px;padding:0 10px;}
+button{padding:10px 20px;border:1px solid #FFD700;background:transparent;color:#FFD700;cursor:pointer;border-radius:5px;margin:5px;transition:0.3s;}
+button:hover{background:#FFD700;color:#000;}
+#btn-start{display:block;margin:15px auto;padding:10px 25px;border:2px solid #FFD700;background:transparent;color:#FFD700;font-size:16px;border-radius:8px;transition: all 0.3s ease;}
+#btn-start:hover{background:#FFD700;color:#000;transform: rotate(15deg) scale(1.05);}
+#interface-services,#full-screen-category,#full-screen-manga,#full-screen-story,#full-about,#full-help{display:none;padding:30px 20px;max-width:700px;margin:20px auto;background:#111;color:#FFD700;border:2px solid #FFD700;border-radius:12px;position:relative;transition: background 0.3s;}
+.service-category{margin-bottom:25px;padding:15px;border:1px solid #FFD700;border-radius:10px;background:rgba(255,215,0,0.05);cursor:pointer;}
+.service-category h3{margin-bottom:10px;font-size:20px;}
+.service-category p{margin-bottom:10px;font-size:16px;}
+#quiz-buttons{display:flex;justify-content:center;gap:20px;margin:20px 0;}
+#quiz-buttons button{font-size:20px;padding:15px 25px;}
+#btn-restart,#btn-quiz-back,#btn-next,#btn-back-category,#btn-back-story,#btn-back-about,#btn-back-help{border-radius:5px;font-size:16px;padding:10px 20px;margin:5px;}
+footer{position:fixed;bottom:0;left:0;width:100%;display:flex;justify-content:space-around;background: rgba(0,0,0,0.6);padding:10px 0;font-size:14px;z-index:20;}
+footer a, footer button{color:#FFD700;text-decoration:none;cursor:pointer;background:transparent;border:none;}
+/* Animation grain de sable doré */
+#sand-container{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;}
+.sand{position:absolute;width:3px;height:3px;border-radius:50%;background:gold;animation:sandFall 5s linear infinite;}
+@keyframes sandFall{0%{transform:translateY(-10px);}100%{transform:translateY(110vh);}}
+/* Animation ouverture */
+#opening-animation{position:fixed;top:0;left:0;width:100%;height:100%;background:#050505;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:50;color:#FFD700;font-family:'Zen Dots',cursive;}
+#opening-animation h1{font-size:64px;margin-bottom:20px;text-shadow:0 0 15px #FFD700;}
+#opening-animation p{font-size:20px;}
+#story-content {
+  white-space: pre-line; /* Respecte les sauts de ligne \n */
+  text-align: justify;    /* Optionnel : alignement du texte */
+  line-height: 1.6;       /* Espace entre lignes */
+}
+</style>
+</head>
+<body>
+
+<!-- Animation ouverture -->
+<div id="opening-animation">
+  <h1>KAIZEN</h1>
+  <p>Créé par Ramron</p>
+</div>
+
+<div id="sand-container"></div>
+
+<header>
+  <div class="logo" id="logo-title">KAIZEN</div>
+  <div class="hamburger" id="hamburger"><div></div><div></div><div></div></div>
+  <nav id="nav-menu">
+    <a href="#" id="nav-citations">Citations</a>
+    <a href="#" id="nav-histoire">Histoire</a>
+    <a href="#" id="nav-manga">Manga Quiz</a>
+  </nav>
+</header>
+
+<main id="main-page">
+  <h2>KAIZEN</h2>
+  <blockquote id="citation">« Chaque jour, deviens une version légèrement meilleure de toi-même. »</blockquote>
+  <button id="btn-start">🥷 Commencer</button>
+</main>
+
+<section id="interface-services">
+  <h2>ART KAIZEN</h2>
+  <div class="service-category" id="category-citation"><h3>📜 Citations</h3><p>Clique pour voir une citation motivante</p></div>
+  <div class="service-category" id="category-story"><h3>📖 Histoire motivante et drôle 😂</h3><p>Clique pour découvrir une histoire pleine d’humour et de leçon</p></div>
+  <div class="service-category" id="category-manga"><h3>🎴 Manga Quiz</h3><p>Clique pour tester tes connaissances sur Goku et Gojo</p></div>
+  <button id="btn-back-category">Retour</button>
+</section>
+
+<section id="full-screen-category">
+  <h2 id="full-title"></h2>
+  <p id="full-content"></p>
+  <button id="btn-next">Suivant</button>
+  <button id="btn-back-from-category">Retour</button>
+</section>
+
+<section id="full-screen-story">
+  <h2>Histoire motivante</h2>
+  <p id="story-content"></p>
+  <button id="btn-next-story">Suivant</button>
+  <button id="btn-back-story">Retour</button>
+</section>
+
+<section id="full-screen-manga">
+  <h2>Manga Quiz</h2>
+  <p id="quiz-question"></p>
+  <div id="quiz-buttons">
+    <button id="btn-true">✅ Vrai</button>
+    <button id="btn-false">❌ Faux</button>
+  </div>
+  <button id="btn-restart">Recommencer</button>
+  <button id="btn-quiz-back">Retour</button>
+  <p id="quiz-score">Score: 0</p>
+</section>
+
+<section id="full-about">
+  <h2>À propos de Kaizen</h2>
+  <p>Kaizen est une application interactive de développement personnel et motivation, combinant citations, histoires motivantes et quiz Manga.  
+  Il a été conçu pour inspirer, divertir et améliorer progressivement ses utilisateurs.  
+  L’application propose une expérience unique de progression personnelle, en intégrant des références manga et des interactions ludiques pour rendre la motivation amusante.  
+  Cette application a été développé par Ramron, le développeur passionné derrière cette création.  
+  Profitez, explorez et laissez Kaizen vous guider vers votre meilleure version !</p>
+  <button id="btn-back-about">Retour</button>
+</section>
+
+<section id="full-help">
+  <h2>Aide</h2>
+  <p>Pour toute suggestion ou modification, contactez-nous sur WhatsApp :</p>
+  <button onclick="window.open('https://wa.me/224663661625','_blank')">📱 +224663661625</button>
+  <button onclick="window.open('https://wa.me/224622962273','_blank')">📱 +224622962273</button>
+  <button id="btn-back-help">Retour</button>
+</section>
+
+<footer id="footer">
+  <a href="#" id="btn-help">Aide</a>
+  <a href="#" id="btn-about">À propos</a>
+</footer>
+
+<script>
+// Animation ouverture
+const opening = document.getElementById("opening-animation");
+window.addEventListener("load", ()=>{
+  setTimeout(()=>{opening.style.display="none";}, 2500); // 2.5s animation
+});
+
+// Hamburger
+const hamburger=document.getElementById("hamburger");
+const navMenu=document.getElementById("nav-menu");
+hamburger.addEventListener("click",()=>{navMenu.classList.toggle("active");hamburger.classList.toggle("open");});
+
+// Citations
+const citations = [
+"« Ramron ne recule jamais devant un obstacle. » – Ramron",
+"« Chaque jour, Ramron se rapproche de sa meilleure version. » – Ramron",
+"« La persévérance de Ramron forge son succès. » – Ramron",
+"« Ramron transforme ses défis en opportunités. » – Ramron",
+"« Avec courage et discipline, Ramron avance toujours. » – Ramron",
+"« Ramron croit en ses rêves même quand personne d’autre ne le fait. » – Ramron",
+"« L’excellence est l’habitude quotidienne de Ramron. » – Ramron",
+"« Ramron ne fuit pas les échecs, il les maîtrise. » – Ramron",
+"« La patience de Ramron est plus puissante que la peur. » – Ramron",
+"« Ramron sait que le progrès vient des petits pas constants. » – Ramron",
+"« Ramron crée sa propre lumière dans l’obscurité. » – Ramron",
+"« La détermination de Ramron inspire ceux qui l’entourent. » – Ramron",
+"« Ramron se concentre sur ce qu’il peut contrôler, pas sur le reste. » – Ramron",
+"« La force de Ramron réside dans sa constance. » – Ramron",
+"« Ramron transforme chaque difficulté en leçon de vie. » – Ramron","« La maîtrise de soi est la clé de la liberté. » – Kyotaka",
+"« Les défis sont des cadeaux qui nous révèlent. » – Kyotaka",
+"« Se lever après chaque chute est la vraie victoire. » – Kyotaka",
+"« La patience est l’alliée de l’esprit fort. » – Kyotaka",
+"« Les rêves exigent du courage et de la discipline. » – Kyotaka",
+"« Le progrès se mesure en petites étapes constantes. » – Kyotaka",
+"« Chaque erreur est une leçon pour demain. » – Kyotaka",
+"« Les limites n’existent que si tu les acceptes. » – Kyotaka",
+"« La lumière intérieure guide toujours le chemin. » – Kyotaka",
+"« La force n’est rien sans sagesse. » – Kyotaka",
+"« Ne crains pas l’inconnu, embrasse-le. » – Kyotaka",
+"« La vraie richesse est la paix de l’esprit. » – Kyotaka",
+"« Chaque instant est une chance de renaître. » – Kyotaka",
+"« La discipline forge le caractère. » – Kyotaka",
+"« L’intention est plus puissante que l’action seule. » – Kyotaka",
+"« Savoir écouter est le premier pas vers la sagesse. » – Kyotaka",
+"« L’esprit calme voit clair. » – Kyotaka",
+"« L’effort d’aujourd’hui est le succès de demain. » – Kyotaka",
+"« Ne laisse jamais la peur décider pour toi. » – Kyotaka",
+"« Le contrôle de soi est le pouvoir suprême. » – Kyotaka","« Connais-toi toi-même. » – Socrate",
+"« Le succès n’est pas final, l’échec n’est pas fatal : c’est le courage de continuer qui compte. » – Winston Churchill",
+"« La vie est vraiment simple, mais nous insistons à la rendre compliquée. » – Confucius",
+"« Sois le changement que tu veux voir dans le monde. » – Mahatma Gandhi",
+"« Ce qui ne nous tue pas nous rend plus fort. » – Friedrich Nietzsche",
+"« L’éducation est l’arme la plus puissante pour changer le monde. » – Nelson Mandela",
+"« Le bonheur n’est pas quelque chose de prêt à l’emploi. Il vient de vos propres actions. » – Dalaï Lama",
+"« Ne rêve pas ta vie, vis tes rêves. » – Mark Twain",
+"« La meilleure façon de prédire le futur est de le créer. » – Peter Drucker",
+"« La discipline est le pont entre les objectifs et l’accomplissement. » – Jim Rohn",];
+const citation=document.getElementById("citation");
+
+// Page départ
+const btnStart=document.getElementById("btn-start");
+const mainPage=document.getElementById("main-page");
+const interfaceServices=document.getElementById("interface-services");
+const logoTitle=document.getElementById("logo-title");
+const footer=document.getElementById("footer");
+const btnBackCategoryMain=document.getElementById("btn-back-category");
+btnStart.addEventListener("click",()=>{
+  mainPage.style.display="none";
+  interfaceServices.style.display="block";
+  logoTitle.textContent="ART KAIZEN";
+  footer.style.display="none";
+});
+btnBackCategoryMain.addEventListener("click",()=>{
+  interfaceServices.style.display="none";
+  mainPage.style.display="block";
+  logoTitle.textContent="KAIZEN";
+  footer.style.display="flex";
+});
+
+// Citations catégorie
+const fullScreen=document.getElementById("full-screen-category");
+const fullTitle=document.getElementById("full-title");
+const fullContent=document.getElementById("full-content");
+const btnNext=document.getElementById("btn-next");
+const btnBackFromCategory=document.getElementById("btn-back-from-category");
+let currentArray=[];
+document.getElementById("category-citation").addEventListener("click",()=>{
+  document.body.style.background="#1B1B2F";
+  interfaceServices.style.display="none";
+  fullScreen.style.display="block";
+  fullTitle.textContent="📜 Citations";
+  currentArray=citations;
+  fullContent.textContent=currentArray[Math.floor(Math.random()*currentArray.length)];
+});
+btnNext.addEventListener("click",()=>{fullContent.textContent=currentArray[Math.floor(Math.random()*currentArray.length)];});
+btnBackFromCategory.addEventListener("click",()=>{fullScreen.style.display="none"; interfaceServices.style.display="block"; document.body.style.background="#050505";});
+
+// Histoire motivante catégorie
+const fullStory = document.getElementById("full-screen-story");
+const storyContent = document.getElementById("story-content");
+const btnNextStory = document.getElementById("btn-next-story");
+const btnBackStory = document.getElementById("btn-back-story");
+
+let currentStoryIndex = 0;
+const histoires = [
+`Histoire 1 : Le chat ninja et le ballon magique.\n 
+Ramron et Moïse étaient au terrain de basket quand Ramron trouva un vieux ballon magique dans le grenier de son oncle. Intrigué, il le lança pour tester ses capacités, mais le ballon rebondit tout seul et esquiva Moïse, qui courait après en criant.\n Emmanuel, fidèle à lui-même, tenta de l’intercepter et finit par glisser sur une feuille mouillée, envoyant le ballon valser sur le toit. Ousmane éclata de rire en voyant Emmanuel pendu au parapet, tandis que Hinata tentait de rattraper le ballon avec une technique improbable, en sautant d’un pied sur l’autre. Moïse fit un plongeon héroïque mais atterrit dans une flaque de boue, éclaboussant tout le monde autour. \n Mariame, qui observait depuis le banc, éclata de rire en voyant Anya glisser à son tour en essayant de ramasser le ballon tombé. Le ballon cntinua de rebondir dans tous les sens, comme s’il avait sa propre vie, passant entre les jambes de Ramron et terminant sa course sur la branche d’un arbre. Chacun tenta de récupérer le ballon à tour de rôle, provoquant des éclats de rire sans fin. Le soleil commença à se coucher et les ombres des arbres dessinaient des formes étranges sur le terrain. Ramron réalisa que ces moments imprévus, où tout semble hors de contrôle, étaient ceux qui rendaient la vie mémorable. Même Emmanuel, trempé et couvert de boue, riait à gorge déployée. Hinata et Moïse décidèrent d’improviser un mini-jeu : celui qui rattraperait le ballon devait inventer une petite chorégraphie de basket. Le ballon sembla obéir à ses propres règles, changeant le rythme et la trajectoire à chaque rebond. La journée passa si vite que personne ne remarqua le temps, et même le chat du voisin observait, intrigué par le chaos joyeux. Les enfants finirent par s’asseoir autour du terrain, épuisés mais heureux, discutant des exploits les plus drôles et des cascades involontaires. Ramron comprit que parfois, il suffit de rire et de partager la joie pour transformer une journée banale en souvenir inoubliable.\n 
+**Morale : Même dans le chaos, garder le sourire et transformer les erreurs en moments joyeux rend la vie plus belle.**`,
+
+`Histoire 2 : Le tournoi de ramen explosif.\n
+Ramron, Mariame, Moustapha et Sarangbè avaient décidé d’organiser un tournoi de ramen au centre du quartier. Chaque bol était rempli d’ingrédients étranges et inattendus : piments géants, nouilles rebondissantes, œufs qui sautaient dès qu’on les touchait, et des sauces mystérieuses qui changeaient de couleur. \nEmmanuel tenta de manger son bol avec sérieux, mais il fit éclabousser la sauce sur Mariame, qui rit si fort qu’elle en renversa son propre bol sur ses chaussures. \n Hinata, armée de baguettes magiques, essayait d’attraper les nouilles qui se débattaient comme des serpents. Moïse fit un plongeon pour rattraper une nouille qui avait filé sur la table voisine, mais atterrit la tête la première dans un paquet de chips, déclenchant des rires en cascade. \n Ousmane, quant à lui, tenta de jongler avec trois bols à la fois, mais un œuf rebondit et finit sur le chapeau d’Anya, la faisant éclater de rire. \n Ramron encouragea chacun à continuer malgré le chaos, et bientôt tout le monde participait à un véritable festival de rires et de créativité. Les passants s’arrêtaient pour admirer le spectacle, certains prenant même des photos des cascades inattendues. \n Chaque erreur, chaque renversement, chaque glissade devenait une source de joie et de souvenirs partagés. À la fin, tout le monde avait les vêtements tachés, les cheveux pleins de nouilles et les lèvres rouges de sauce, mais le sourire de chacun brillait plus fort que le soleil. Ramron comprit que la vraie victoire ne venait pas du bol le plus rempli mais du rire et de la complicité créés avec ses amis.\n 
+**Morale : L’humour et la persévérance transforment même le chaos en moments mémorables.**`,
+
+`Histoire 3 : La course des parapluies volants.\n 
+Un matin pluvieux, Ramron et Hinata eurent l’idée de créer une course de parapluies volants dans le parc. \n Moïse et Emmanuel prirent part à la course, mais dès le premier virage, les parapluies commencèrent à rebondir dans tous les sens. Mariame glissa sur une flaque et atterrit sur le parapluie d’Ousmane, le faisant s’envoler légèrement dans les airs.\n  Anya, qui observait la scène depuis le banc, éclata de rire et décida de rejoindre la course en criant des encouragements. Moustapha et Sarangbè participèrent en inventant des techniques absurdes pour contrôler leurs parapluies. Chaque participant inventait des mouvements loufoques : Ramron fit un zigzag spectaculaire, Hinata fit un saut périlleux pour éviter une branche basse, et Moïse tourna en rond en essayant de ne pas heurter Emmanuel. \n Le public, composé d’enfants et de voisins curieux, applaudissait chaque pirouette involontaire et chaque glissade. Les parapluies semblaient avoir leur propre volonté, rebondissant sur les arbres, sur les bancs et même sur les têtes des spectateurs. Après plusieurs tours épiques, tout le monde était trempé mais hilare, et chacun partageait ses astuces et ses rires avec les autres. Ramron réalisa que l’important n’était pas de gagner mais de créer des souvenirs joyeux et de partager la bonne humeur. La pluie transformait le parc en un terrain de jeu magique où chaque erreur devenait une aventure. À la fin, même Emmanuel, couvert de boue et encore confus, riait à pleines dents en voyant Anya et Mariame applaudir ses efforts maladroits.\n
+**Morale : Le plaisir et le partage valent plus que la victoire, et chaque moment drôle renforce les liens.**`,
+
+`Histoire 4 : La bibliothèque des inventions folles.\n 
+Ramron et Ousmane passaient l’après-midi dans la bibliothèque municipale lorsqu’ils découvrirent un vieux manuel sur les inventions étranges. Moïse et Sarangbè, curieux, tentèrent de construire une machine qui transformait les livres en confettis dorés.\n Emmanuel, fidèle à sa maladresse légendaire, renversa accidentellement un seau d’encre sur le plan de la machine, provoquant un mini-feu d’artifice de gouttes colorées. Hinata et Mariame éclataient de rire en voyant les projections d’encre voler comme des papillons. \n Ramron eut l’idée d’utiliser un ventilateur pour diriger les confettis, créant un spectacle improvisé qui fascinait les passants. Anya fit un saut héroïque pour attraper un livre volant, tandis qu’Ousmane tentait de réparer la machine avant qu’elle n’explose en couleurs. Le chaos de la bibliothèque se transforma en un festival d’inventivité et d’éclats de rire, chaque erreur générant une nouvelle idée. À la fin, ils réalisèrent que l’inspiration venait souvent des situations les plus absurdes et que la collaboration, même chaotique, pouvait créer des moments magiques. \n 
+**Morale : L’imagination et la coopération transforment les accidents en opportunités créatives.**`,
+
+`Histoire 5 : Le concours de grimaces légendaires.\n 
+Ramron, Mariame et Moustapha organisèrent un concours de grimaces. Emmanuel, qui ne comprenait jamais la subtilité des expressions, fit une grimace si étrange qu’elle fit peur aux pigeons du parc.\n Ousmane et Hinata tentèrent de surpasser les autres avec des gestes absurdes et des mimiques exagérées. Sarangbè participa aussi avec des grimaces encore plus loufoques.\n  Anya participa timidement mais finit par éclater de rire après avoir vu Moïse imiter un mime invisible. Chaque grimace devenait plus inventive, et les spectateurs riaient aux éclats. À la fin, chacun reçut un “prix de créativité” et tous célébrèrent leurs efforts avec un goûter improvisé. \n 
+**Morale : L’audace et l’humour rapprochent les amis et apportent de la joie à tous.**`,
+
+`Histoire 6 : La chasse aux trésors farfelue.\n 
+Ramron, Moïse et Hinata décidèrent de partir à la chasse aux trésors dans le vieux parc de la ville. Chaque indice semblait plus étrange que le précédent : des flèches dessinées à l’encre invisible, des énigmes sur des arbres, et des pierres qui brillaient bizarrement au soleil.\n  Emmanuel, fidèle à lui-même, confondait toujours les indices et finissait par creuser des trous inutiles. Mariame et Anya riaient à chaque erreur et aidaient à remettre le groupe sur la bonne piste. Moustapha et Sarangbè improvisaient des gadgets pour détecter les trésors, comme des “radars” faits de vieux tuyaux et de ficelles. Ousmane proposa de suivre les oiseaux, persuadé qu’ils conduisaient vers le trésor. \n Après plusieurs péripéties où tout semblait s’échapper, Ramron trouva finalement une boîte contenant… des biscuits dorés et des notes de motivation ! Tout le monde éclata de rire et partagea les biscuits comme un vrai trésor. Le soleil se couchait et les ombres des arbres rendaient la chasse encore plus magique. Chacun réalisa que le vrai trésor n’était pas les biscuits, mais les rires, les erreurs, et les moments partagés.\n 
+**Morale : Les erreurs et les péripéties font partie de l’aventure, le vrai trésor est dans le partage et la complicité.**`,
+
+`Histoire 7 : La machine à confettis incontrôlable.\n 
+Ramron et Ousmane eurent l’idée de créer une machine à confettis pour fêter la fin des examens. Moïse et Hinata aidèrent à assembler les pièces, mais Emmanuel, en voulant brancher un câble, fit démarrer la machine à plein régime. \n Des confettis dorés et argentés jaillirent dans tous les sens, couvrant Mariame et Anya, et même le chat qui dormait tranquille. Moustapha et Sarangbè improvisèrent des “parapluies” pour éviter les jets, mais finirent eux-mêmes sous un nuage de confettis. \n Ramron éclata de rire en voyant Emmanuel glisser sur les confettis et atterrir dans une pile de coussins. Chaque participant inventait des techniques de protection plus absurdes que les précédentes, transformant le salon en un vrai champ de bataille joyeux. Au final, ils décidèrent de continuer la fête malgré le chaos, partageant rires et souvenirs.\n
+**Morale : Même le chaos peut devenir un moment de joie si l’on garde le sourire et la créativité.**`,
+
+`Histoire 8 : Le karaoké improvisé.\n 
+Un soir, Ramron, Moïse, Moustapha et Sarangbè décidèrent de faire un karaoké improvisé dans le jardin. Emmanuel, qui ne connaissait pas les paroles, improvisait en chantant des mots inventés, provoquant des fous rires. \n Hinata et Mariame chantèrent en duo, avec Anya qui imitait les mouvements des chanteurs célèbres. Ousmane prit un micro et inventa des gestes absurdes qui firent hurler de rire tout le monde. Même les voisins vinrent jeter un œil, amusés par la scène. \n Chaque chanson se transformait en spectacle burlesque où les erreurs devenaient des moments hilarants. À la fin de la soirée, tout le monde avait la voix cassée mais le cœur rempli de joie.  \n 
+**Morale : L’audace et le plaisir de créer ensemble surpassent la perfection.**`,
+
+`Histoire 9 : Le défi du sandwich géant.\n
+Ramron et Moustapha décidèrent de créer le sandwich le plus grand de la ville. Hinata et Mariame les aidaient en apportant les ingrédients, tandis qu’Emmanuel essayait de suivre les instructions… sans grand succès. Anya et Ousmane inventèrent des tours pour empiler les couches plus vite. \n Sarangbè proposa de mesurer la hauteur avec un mètre, mais le sandwich s’écroula plusieurs fois, provoquant des éclats de rire. Chacun ajoutait un ingrédient à sa façon, et le résultat final était un chef-d’œuvre instable mais délicieux. Ils finirent par partager le sandwich avec tous les voisins, créant un moment de partage et de convivialité.  \n 
+**Morale : La collaboration, même imparfaite, crée des souvenirs mémorables et délicieux.**`,
+
+`Histoire 10 : Le tournoi de dodgeball épique.\n 
+Ramron, Moïse, Moustapha, Sarangbè et Hinata participaient à un tournoi de dodgeball dans la cour de l’école. Emmanuel, comme toujours, se faisait toucher en premier et courait dans tous les sens. \n Mariame et Anya inventèrent des stratégies absurdes, comme lancer le ballon avec les yeux bandés. Ousmane réussit à esquiver trois ballons d’affilée, provoquant les acclamations des spectateurs. Ramron dirigeait son équipe avec humour et improvisation. À la fin, tout le monde était couvert de poussière et riait sans fin.  \n 
+**Morale : Le plaisir de jouer et d’inventer ensemble vaut mieux que la victoire.**`,
+
+`Histoire 11 : La course en sacs légendaire.\n 
+Ramron, Moïse et Moustapha participaient à une course en sacs au parc. Emmanuel s’emmêla les pieds et tomba plusieurs fois, provoquant des éclats de rire chez Hinata et Mariame. Anya et Ousmane inventèrent des “sauts acrobatiques” pour aller plus vite, tandis que Sarangbè et Ramron riaient de chaque chute.\n  La course dura des heures, mais chaque chute et chaque glissade ajoutait à la joie de l’événement.\n
+**Morale : Même en tombant, on peut rire et partager la joie avec les autres.**`,
+
+`Histoire 12 : L’expérience scientifique explosive.\n 
+Ramron et Ousmane décidèrent de réaliser une expérience chimique dans le garage. Moïse et Moustapha participaient en suivant les instructions, tandis qu’Emmanuel mélangeait les produits… un peu trop vite ! Hinata et Mariame éclatèrent de rire en voyant les explosions colorées et les nuages de fumée sortir de la verrerie. Anya inventa des protections absurdes pour ne pas se faire éclabousser. Au final, l’expérience transforma le garage en un spectacle multicolore et joyeux.\n
+**Morale : L’expérimentation et la curiosité, même avec des erreurs, apportent des découvertes et des éclats de rire.**`,
+
+`Histoire 13 : Le défilé de mode farfelu.\n 
+Ramron, Moïse et Sarangbè organisèrent un défilé de mode avec des vêtements fabriqués à partir de matériaux insolites : cartons, rubans, feuilles et papier doré. \n Emmanuel, toujours maladroit, fit tomber un mannequin sur le sol, déclenchant des rires. Hinata et Mariame improvisèrent des coiffures extravagantes pour chaque modèle. Anya et Ousmane ajoutèrent des accessoires absurdes, comme des parapluies miniatures ou des lunettes géantes.\n  Le public applaudit chaque création, transformant le chaos en spectacle amusant.\n 
+**Morale : La créativité et l’humour rendent chaque projet unique et mémorable.**`,
+
+`Histoire 14 : Le marathon des éclats de rire.\n 
+Ramron, Moïse et Moustapha décidèrent de courir un marathon déguisé. Emmanuel, déguisé en poulet, trébuchait sans cesse, provoquant des fous rires. Hinata et Mariame inventaient des obstacles farfelus pour rendre la course plus drôle. Ousmane et Sarangbè inventaient des stratégies pour gagner tout en riant. Chaque kilomètre était une aventure remplie de rires et d’amitiés renforcées.  \n 
+**Morale : L’humour et la camaraderie sont plus importants que la compétition.**`,
+
+`Histoire 15 : La soirée pyjama épique.\n 
+Ramron, Mariame et Anya organisèrent une soirée pyjama avec Ousmane, Moïse et Hinata. Emmanuel, fidèle à lui-même, renversa du pop-corn sur tout le monde. Moustapha et Sarangbè improvisèrent des histoires effrayantes qui faisaient rire plutôt que peur. Chacun inventa des jeux, des chansons et des danses absurdes jusqu’au matin. Les souvenirs de cette nuit restèrent gravés dans la mémoire de tous, avec des éclats de rire et des moments magiques partagés.  \n
+**Morale : Les souvenirs heureux se construisent dans le partage, l’humour et la complicité.**`
+];
+// Afficher l’histoire actuelle
+function showStory() {
+  storyContent.textContent = histoires[currentStoryIndex];
+}
+
+// Entrer dans la catégorie histoires
+document.getElementById("category-story").addEventListener("click", () => {
+  document.body.style.background = "#050505";
+  interfaceServices.style.display = "none";
+  fullStory.style.display = "block";
+
+  currentStoryIndex = 0; // toujours commencer par l’histoire 1
+  showStory();
+});
+
+// Histoire suivante (ordre normal)
+btnNextStory.addEventListener("click", () => {
+  currentStoryIndex++;
+
+  if (currentStoryIndex >= histoires.length) {
+    currentStoryIndex = 0; // revient à la 1ère
+  }
+
+  showStory();
+});
+
+// Retour aux catégories
+btnBackStory.addEventListener("click", () => {
+  fullStory.style.display = "none";
+  interfaceServices.style.display = "block";
+});
+
+// Manga Quiz
+const quizQuestions = [
+  {q: "Goku est un Saiyan ?", a: true},
+  {q: "Satoru Gojo est dans Jujutsu Kaisen ?", a: true},
+  {q: "Goku est un personnage de Naruto ?", a: false},
+  {q: "Ramron peut battre Goku ?", a: true},
+  {q: "Luffy est le capitaine des Chapeaux de paille ?", a: true},
+  {q: "Naruto a le Sharingan naturellement ?", a: false},
+  {q: "Ramron est un expert en basket ?", a: true},
+  {q: "Hinata est un personnage de Dragon Ball ?", a: false},
+  {q: "Satoru Gojo peut manipuler le temps ?", a: false},
+  {q: "Ramron aime les mangas ?", a: true},
+  {q: "Gohan est le fils de Goku ?", a: true},
+  {q: "Sasuke est dans My Hero Academia ?", a: false},
+  {q: "Ramron et Limron ont un lien secret ?", a: true},
+  {q: "Luffy a mangé le fruit du démon Gum-Gum ?", a: true},
+  {q: "Naruto est Hokage ?", a: true},
+  {q: "Ramron aime apprendre chaque jour ?", a: true},
+  {q: "Gojo est faible face aux malédictions ?", a: false},
+  {q: "Ousmane est un personnage inventé dans Kaizen ?", a: true},
+  {q: "Kyotaka est un personnage dans Kaizen ?", a: true},
+  {q: "Ramron est un joueur de basket exceptionnel ?", a: true},
+  {q: "Emmanuel est toujours très intelligent ?", a: false},
+  {q: "Ramron aime aider ses amis ?", a: true},
+  { q: "Naruto possède le chakra des neuf bijûs ?", a: true },
+{ q: "Goku a vaincu Beerus ?", a: false },
+{ q: "Gojo peut manipuler l’infini passivement ?", a: true },
+{ q: "Sukuna était humain à l’origine ?", a: true },
+{ q: "Naruto peut utiliser le Mokuton ?", a: false },
+{ q: "Vegeta a déjà utilisé l’Ultra Instinct ?", a: false },
+{ q: "Gojo est scellé à cause du Royaume Prison ?", a: true },
+{ q: "Goku a appris l’Ultra Instinct sans entraînement ?", a: false },
+{ q: "Sasuke a perdu son Rinnegan ?", a: true },
+{ q: "Gojo peut être touché sans technique spéciale ?", a: false },
+{ q: "Le Geass de Lelouch fonctionne sur une même personne plus d’une fois ?", a: false },
+{ q: "Spike Spiegel est mort officiellement à la fin de Cowboy Bebop ?", a: false },
+{ q: "Guts porte l’Armure du Berserker avant de rencontrer Griffith ?", a: false },
+{ q: "Kirito meurt réellement dans Sword Art Online ?", a: false },
+{ q: "Subaru peut contrôler son pouvoir de retour dans le temps ?", a: false },
+
+{ q: "Rimuru Tempest était humain avant sa réincarnation ?", a: true },
+{ q: "Eren est inspiré d’un personnage historique réel ?", a: false },
+{ q: "Mob atteint le niveau 100% en permanence ?", a: false },
+{ q: "Le notebook de Death Note peut ressusciter quelqu’un ?", a: false },
+{ q: "Saitama a déjà été blessé gravement ?", a: false },
+
+{ q: "Le pouvoir d’Anos Voldigoad repose uniquement sur la magie noire ?", a: false },
+{ q: "Tokyo Revengers repose sur un voyage temporel illimité ?", a: false },
+{ q: "Le Nen peut tuer son utilisateur s’il est mal utilisé ?", a: true },
+{ q: "L’Attack Titan peut voir les souvenirs de ses futurs détenteurs ?", a: true },
+{ q: "Le pouvoir de Sukuna dépend uniquement des doigts ?", a: false },
+
+{ q: "Meliodas est le fils du Roi Démon ?", a: true },
+{ q: "Le héros de Solo Leveling commence fort dès le début ?", a: false },
+{ q: "Lelouch meurt officiellement à la fin de Code Geass ?", a: true },
+{ q: "Denji était déjà un chasseur de démons officiel ?", a: false },
+{ q: "Le titan d’Eren peut être transmis volontairement ?", a: true },
+
+{ q: "Alucard peut mourir définitivement sans restriction ?", a: false },
+{ q: "Light Yagami regrette ses actes avant de mourir ?", a: false },
+{ q: "Le Bankai de tous les Shinigami est identique ?", a: false },
+{ q: "Le pouvoir de Gojo peut être traversé par la vitesse pure ?", a: false },
+{ q: "Naruto est né avec le chakra de Kurama ?", a: true },
+
+{ q: "Edward Elric récupère son corps sans sacrifice ?", a: false },
+{ q: "Le Haki des Rois peut être appris par entraînement ?", a: false },
+{ q: "Goku est plus fort que Beerus dans l’anime ?", a: false },
+{ q: "La malédiction de Subaru peut être révélée sans conséquence ?", a: false },
+{ q: "Griffith a tout sacrifié volontairement ?", a: true },
+{ q: "Le Mangekyō Sharingan peut être utilisé sans perte de vision ?", a: false },
+{ q: "Le monde de One Punch Man est protégé par des dieux actifs ?", a: false },
+{ q: "Ichigo est né uniquement humain ?", a: false },
+{ q: "La magie de Black Clover dépend uniquement du mana ?", a: false },
+{ q: "Asta possède du mana caché ?", a: false },
+
+{ q: "Le pouvoir de Reigen est réel à 100% ?", a: false },
+{ q: "Le Rumbling peut être arrêté sans tuer Eren ?", a: false },
+{ q: "La vérité (Truth) existe en dehors de l’alchimie ?", a: true },
+{ q: "Le Geass peut être désactivé volontairement ?", a: false },
+{ q: "Gojo peut être touché sans technique maudite ?", a: true },
+
+{ q: "La forme Gear 5 repose sur l’imagination ?", a: true },
+{ q: "Zoro possède le Haki des Rois ?", a: true },
+{ q: "Le Nen de Gon disparaît définitivement ?", a: false },
+{ q: "Madara a réveillé le Rinnegan après sa mort ?", a: true },
+{ q: "La malédiction de Sukuna peut être scellée sans réceptacle ?", a: false },
+
+{ q: "Kaneki devient un Ghoul volontairement ?", a: false },
+{ q: "Le pouvoir de Subaru agit après la mort réelle ?", a: true },
+{ q: "Le Soleil est la source ultime du pouvoir de Escanor ?", a: true },
+{ q: "La pierre philosophale contient des âmes humaines ?", a: true },
+{ q: "Le titan colossal peut être utilisé sans transformation ?", a: false },
+
+{ q: "Lelouch gagne sans jamais tuer personne ?", a: false },
+{ q: "La technique de Hit fonctionne hors du temps ?", a: true },
+{ q: "Le Sharingan peut copier le Senjutsu ?", a: false },
+{ q: "La volonté de D est expliquée officiellement ?", a: false },
+{ q: "Anos Voldigoad peut ressusciter sans magie ?", a: true },
+
+{ q: "Le pouvoir de Light dépend de son intelligence ?", a: true },
+{ q: "Saitama suit les lois normales de la physique ?", a: false },
+{ q: "Naruto perd Kurama définitivement ?", a: true },
+{ q: "Ichigo peut perdre tous ses pouvoirs ?", a: true },
+{ q: "Le monde de Bleach repose sur un équilibre cosmique ?", a: true },
+  {q: "Hinata et Ramron se disputent souvent ?", a: false},
+  {q: "Le rire est important dans Kaizen ?", a: true},
+  {q: "Ramron peut voyager dans le temps ?", a: false},
+  {q: "Ousmane est un excellent stratège ?", a: true},
+  {q: "Satoru Gojo a les yeux bandés ?", a: true},
+  {q: "Mizuki et Mariame sont la même personne ?", a: true},
+  {q: "Moïse et Moustapha sont des personnages distincts ?", a: true},
+  {q: "Les histoires de Kaizen sont toujours motivantes ?", a: true}
+];
+let currentQuizIndex=0,score=0;
+const quizQuestion=document.getElementById("quiz-question");
+const btnTrue=document.getElementById("btn-true");
+const btnFalse=document.getElementById("btn-false");
+const quizScore=document.getElementById("quiz-score");
+const fullManga=document.getElementById("full-screen-manga");
+const btnRestart=document.getElementById("btn-restart");
+const btnQuizBack=document.getElementById("btn-quiz-back");
+const quizButtons=document.getElementById("quiz-buttons");
+
+document.getElementById("category-manga").addEventListener("click",()=>{
+  document.body.style.background="#2F1B2F";
+  interfaceServices.style.display="none";
+  fullManga.style.display="block";
+  btnRestart.style.display="none";
+  quizButtons.style.display="flex";
+  currentQuizIndex=0;score=0;
+  quizScore.textContent="Score: 0";
+  displayQuestion();
+});
+
+function displayQuestion(){
+  if(currentQuizIndex<quizQuestions.length){
+    quizQuestion.textContent=quizQuestions[currentQuizIndex].q;
+  }else{
+    quizQuestion.textContent="Quiz terminé! Score final: "+score;
+    quizButtons.style.display="none";
+    btnRestart.style.display="inline-block";
+  }
+}
+
+function checkAnswer(ans){
+  if(currentQuizIndex>=quizQuestions.length) return;
+  if(ans===quizQuestions[currentQuizIndex].a){
+    score++; currentQuizIndex++;
+    quizScore.textContent="Score: "+score;
+    displayQuestion();
+  }else{
+    quizQuestion.textContent="Perdu !";
+    quizButtons.style.display="none";
+    btnRestart.style.display="inline-block";
+  }
+}
+
+btnTrue.addEventListener("click",()=>{checkAnswer(true);});
+btnFalse.addEventListener("click",()=>{checkAnswer(false);});
+btnRestart.addEventListener("click",()=>{
+  currentQuizIndex=0;score=0;
+  quizScore.textContent="Score: 0";
+  quizButtons.style.display="flex";
+  displayQuestion();
+});
+btnQuizBack.addEventListener("click",()=>{
+  fullManga.style.display="none";
+  interfaceServices.style.display="block";
+  document.body.style.background="#050505";
+});
+
+// Aide et À propos
+const btnHelp=document.getElementById("btn-help");
+const btnAbout=document.getElementById("btn-about");
+const fullAbout=document.getElementById("full-about");
+const btnBackAbout=document.getElementById("btn-back-about");
+const fullHelp=document.getElementById("full-help");
+const btnBackHelp=document.getElementById("btn-back-help");
+
+btnHelp.addEventListener("click",()=>{
+  interfaceServices.style.display="none";
+  fullHelp.style.display="block";
+});
+btnAbout.addEventListener("click",()=>{
+  interfaceServices.style.display="none";
+  fullAbout.style.display="block";
+});
+btnBackAbout.addEventListener("click",()=>{
+  fullAbout.style.display="none";
+  mainPage.style.display="block";
+  logoTitle.textContent="KAIZEN";
+  footer.style.display="flex";
+});
+btnBackHelp.addEventListener("click",()=>{
+  fullHelp.style.display="none";
+  mainPage.style.display="block";
+  logoTitle.textContent="KAIZEN";
+  footer.style.display="flex";
+});
+
+// Sand animation
+for(let i=0;i<100;i++){
+  const sand=document.createElement("div");
+  sand.classList.add("sand");
+  sand.style.left=Math.random()*100+"%";
+  sand.style.animationDuration=(3+Math.random()*5)+"s";
+  sand.style.animationDelay=Math.random()*5+"s";
+  document.getElementById("sand-container").appendChild(sand);
+} 
+</script>
+</body>
+</html>
